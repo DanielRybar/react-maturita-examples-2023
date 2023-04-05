@@ -1,70 +1,80 @@
-# Getting Started with Create React App
+# React - maturitní příklady
+## Založení a spuštění aplikace
+npx create-react-app my-app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+cd my-app
 
-## Available Scripts
+npm start
 
-In the project directory, you can run:
+### 22. AJAX, REST
+* ukázka získávání dat z webového [Beers API](https://api.punkapi.com/v2/beers)
+* fetch a axios
 
-### `npm start`
+npm install -s axios
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 23. React - up/down čítač
+* 2 komponenty - tlačítko a výsledek
 
-### `npm test`
+## Přehled háků
+### useState
+```javascript
+const [stav, metoda_pro_nastaveni_stavu] = useState(vychozi_stav);
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### useEffect
+1) spouští se neustále dokola - bez závislostí
+```javascript
+useEffect(() => {
+    // kód
+});
+```
 
-### `npm run build`
+2) spustí se jen při připojení komponenty do stromu - funkce konstruktoru, prázdné pole závislostí
+```javascript
+useEffect(() => {
+    // kód
+}, []);
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3) spustí se při změně hodnot v závislostech
+```javascript
+useEffect(() => {
+    // kód
+}, [nejaky_nesmysly]);
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4) cleanup efekt - spustí se při odpojení komponenty ze stromu - funkce destruktoru
+```javascript
+useEffect(() => {
+    // kód
+    return () => clearTimeout(); // cleanup
+}, [nejaky_nesmysly]);
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### useCallback
+* v podstatě jako useEffect, funkci pak můžeme předat do pole závislostí
+* výhodnější použití u asynchronních funkcí
+#### Porovnání
+1) useEffect
+```javascript
+// funkci napíšeme v useEffectu a rovnou ji v něm zavoláme
+useEffect(() => {
+  const fetchData = () => {
+    // kód
+  }
+  fetchData();
+}, [searchString]);
+```
+2) useCallback + useEffect
+```javascript
+// pro vytvoření fce použijeme useCallback
+const fetchData = useCallback(() => {
+  // kód
+}, [searchString]);
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+// a použijeme ji v useEffectu
+useEffect(() => {
+  fetchData();
+}, [fetchData]);
+```
