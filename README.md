@@ -23,7 +23,7 @@ const [stav, metoda_pro_nastaveni_stavu] = useState(vychozi_stav);
 ```
 
 ### useEffect
-1) spouští se neustále dokola - bez závislostí
+1) spouští se neustále dokola (při každém překreslení komponenty) - bez závislostí
 ```javascript
 useEffect(() => {
     // kód
@@ -37,7 +37,7 @@ useEffect(() => {
 }, []);
 ```
 
-3) spustí se při změně hodnot v závislostech
+3) spustí se při změně hodnot v závislostech - funkce observeru
 ```javascript
 useEffect(() => {
     // kód
@@ -77,4 +77,20 @@ const fetchData = useCallback(() => {
 useEffect(() => {
   fetchData();
 }, [fetchData]);
+```
+
+### useRef
+```javascript
+export const Second = () => {
+    const [text, setText] = useState("abcdef");
+    const inp = useRef();
+    return (
+        <>
+        <div>First</div>
+        <input ref={inp} />
+        <button onClick={e => {setText(inp.current.value)}}>go</button>
+        <p>{text}</p>
+        </>
+    );
+}
 ```
